@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: stg_bookings
+    description: Staging model for bookings. 
+                 Acts as an abstraction layer that handles basic data quality by imputing missing check-in dates using the length of stay, and deduplicates system records.
+  
+  - name: stg_customers
+    description: Staging model for customers.
+                 Acts as an abstraction layer that handles basic data quality by imputing missing values in the loyalty_tier column to a default 'Blue' status.
+
+  - name: stg_fx_rates
+    description: Staging model for FX rates.
+                 Organizes currency conversion rates against a EUR baseline to enable currency normalization in intermediate layers.
+
+  - name: stg_payments
+    description: Staging model for payments.
+                 Acts as an abstraction layer that handles basic data quality by deduplicating down to the chronologically first transaction per booking_id, aliasing the timestamp as first_paid_at.
+
+  - name: stg_properties
+    description: Staging model for properties.
+                 Acts as a clean 1-to-1 abstraction layer that selects core property data.

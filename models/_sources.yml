@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: source_csv
+    database: booking-technical-assignment
+    schema: source_csv 
+    tables:
+      - name: bookings
+      - name: customers
+      - name: fx_rates
+      - name: payments
+      - name: properties

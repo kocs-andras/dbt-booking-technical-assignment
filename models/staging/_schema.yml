@@ -15,12 +15,21 @@ models:
       - name: brand
         tests:
           - not_null
+          - accepted_values:
+              arguments:
+                values: ['agoda', 'Booking.com', 'KAYAK', 'priceline']
       - name: channel
         tests:
           - not_null
+          - accepted_values:
+              arguments:
+                values: ['affiliate', 'meta_search', 'mobile_app', 'web']
       - name: checkin_date
         tests:
           - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "<checkout_date"
       - name: checkout_date
         tests:
           - not_null
@@ -45,6 +54,9 @@ models:
       - name: nights
         tests:
           - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "=date_diff(checkout_date, checkin_date, day)"
       - name: property_id
         tests:
           - not_null

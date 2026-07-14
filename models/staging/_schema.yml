@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: stg_bookings
-    description: Staging model for bookings. 
+    description: Staging layer for bookings. 
                  Acts as an abstraction layer that handles basic data quality by imputing missing check-in dates using the length of stay, and deduplicates system records.
     columns:
       - name: booking_id
@@ -12,7 +12,7 @@ models:
           
 
   - name: stg_customers
-    description: Staging model for customers.
+    description: Staging layer for customers.
                  Acts as an abstraction layer that handles basic data quality by imputing missing values in the loyalty_tier column to a default 'Blue' status.
     columns:
       - name: customer_id
@@ -21,7 +21,7 @@ models:
           - not_null
 
   - name: stg_fx_rates
-    description: Staging model for FX rates.
+    description: Staging layer for FX rates.
                  Organizes currency conversion rates against a EUR baseline to enable currency normalization in intermediate layers and generates a unique composite surrogate key combining currency and date.
     columns:
       - name: fx_rates_id
@@ -30,7 +30,7 @@ models:
           - not_null
 
   - name: stg_payments
-    description: Staging model for payments.
+    description: Staging layer for payments.
                  Acts as an abstraction layer that handles basic data quality by deduplicating down to the chronologically first transaction per booking_id, aliasing the timestamp as first_paid_at.
     columns:
       - name: payment_id
@@ -39,7 +39,7 @@ models:
           - not_null
 
   - name: stg_properties
-    description: Staging model for properties.
+    description: Staging layer for properties.
                  Acts as a clean 1-to-1 abstraction layer that selects core property data.
     columns:
       - name: property_id

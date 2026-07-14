@@ -10,7 +10,10 @@ with payments as (
 
 select
     p.booking_id
+    , p.amount
+    , p.currency
     , p.first_paid_at
     , round(p.amount * fx.rate_to_eur, 2) as paid_amount_eur
+    , p.payment_method
 from payments as p
 left join fx_rates as fx on p.currency = fx.currency

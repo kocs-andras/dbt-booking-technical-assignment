@@ -46,3 +46,4 @@ from bookings as b
 left join customers as c on b.customer_id = c.customer_id
 left join fx_rates as fx on b.currency = fx.currency
 left join properties as p on b.property_id = p.property_id
+where b.gross_amount > 0

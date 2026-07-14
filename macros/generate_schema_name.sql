@@ -4,7 +4,7 @@
 
     {%- if target_name == 'prod' or target_name == 'production' -%}
 
-        prod_{{ custom_schema_name | trim }}
+        {{ custom_schema_name | trim }}
 
     {%- else -%}
 

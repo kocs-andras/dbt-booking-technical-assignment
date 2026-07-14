@@ -1,0 +1,8 @@
+version: 2
+
+models:
+  - name: int_bookings
+    description: Intermediate model for bookings. Converts gross booking amout to EUR and adds additional customer and property information.
+
+  - name: int_payments
+    description: Intermediate model for payments. Converts payment amount to EUR.

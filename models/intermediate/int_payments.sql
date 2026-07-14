@@ -1,5 +1,11 @@
 --model name: int_payments.sql
 
+{{
+  config(
+    tags=['booking']
+  )
+}}
+
 with payments as (
     select * from {{ ref('stg_payments') }}
 )

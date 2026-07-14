@@ -1,5 +1,11 @@
 --model name: stg_customers.sql
 
+{{
+  config(
+    tags=['booking']
+  )
+}}
+
 with source as (
     select
         c.customer_id	

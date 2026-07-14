@@ -1,5 +1,11 @@
 --model name: bookings.sql
 
+{{
+  config(
+    tags=['booking']
+  )
+}}
+
 with bookings as (
     select * from {{ ref('int_bookings') }}
 )

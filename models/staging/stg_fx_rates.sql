@@ -1,5 +1,11 @@
 --model name: stg_fx_rates.sql
 
+{{
+  config(
+    tags=['booking']
+  )
+}}
+
 with source as (
     select
         fx.as_of_date

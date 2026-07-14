@@ -1,5 +1,11 @@
 --model name: agg_monthly_revenue_by_brand_property.sql
 
+{{
+  config(
+    tags=['booking']
+  )
+}}
+
 with bookings as (
     select * from {{ ref('bookings') }}
 )

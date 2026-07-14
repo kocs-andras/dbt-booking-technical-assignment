@@ -1,5 +1,11 @@
 --model name: stg_properties.sql
 
+{{
+  config(
+    tags=['booking']
+  )
+}}
+
 with source as (
     select
         p.property_id

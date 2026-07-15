@@ -29,6 +29,11 @@ select
     , b.gross_amount_eur
     , b.nights
     , p.paid_amount_eur
+    , (case when b.gross_amount_eur is null then 'unknown' 
+            when b.gross_amount_eur = p.paid_amount_eur then 'paid' 
+            when (p.paid_amount_eur is not null and b.gross_amount_eur > p.paid_amount_eur) then 'partially_paid' 
+            when (p.paid_amount_eur is not null and b.gross_amount_eur < p.paid_amount_eur) then 'overpaid' 
+            else 'unpaid' end) as payment_status
     , b.property_country
     , b.property_id
     , b.property_type

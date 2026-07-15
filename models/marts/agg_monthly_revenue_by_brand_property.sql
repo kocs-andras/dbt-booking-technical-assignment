@@ -2,15 +2,19 @@
 
 {{
   config(
+    materialized = 'incremental',
+    unique_id = 'id',
+    incremental_strategy = 'merge',
+    cluster_by = 'booking_month',
     tags=['booking']
   )
 }}
 
 with bookings as (
     select * from {{ ref('bookings') }} as b
-    /*{% if is_incremental() %}
+    {% if is_incremental() %}
         where b.booking_month >= date_sub((select max(booking_month) from {{ this }}), interval 1 month)
-    {% endif %}*/
+    {% endif %}
 )
 
 , monthly_aggregate as (

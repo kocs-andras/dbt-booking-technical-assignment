@@ -11,7 +11,8 @@ with bookings as (
 )
 
 select
-    b.booking_month
+    {{ dbt_utils.generate_surrogate_key(['b.booking_month','b.brand','b.property_type']) }} as id
+    , b.booking_month
     , b.brand
     , b.property_type
     , count(distinct b.booking_id) as total_bookings
@@ -25,4 +26,4 @@ select
     , round(sum(case when b.status in ('confirmed','completed') then b.gross_amount_eur else 0 end), 2) as total_confirmed_revenue_eur
     , round(sum(case when b.status in ('confirmed','completed') then b.paid_amount_eur else 0 end), 2) as total_paid_revenue_eur
 from bookings as b
-group by 1,2,3
+group by 1,2,3,4

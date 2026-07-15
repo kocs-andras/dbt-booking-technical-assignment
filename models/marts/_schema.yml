@@ -4,8 +4,32 @@ models:
   - name: agg_monthly_revenue_by_brand_property
     description: A reporting mart designed specifically for the Finance team to track financial performance. 
                  It aggregates total confirmed revenue (EUR) and actual collections (EUR), to provide an optimized view of cross-brand monthly business performance.
+    columns:
+      - name: id
+        description: Primary key.
+        tests:
+          - unique
+          - not_null
 
   - name: bookings
     description: The core transaction-level fact table for booking activity. 
                  It integrates total payments, with all monetary values standardized into EUR. 
-                 This table serves as the single source of truth for granular revenue, status tracking, and collection analysis
+                 This table serves as the single source of truth for granular revenue, status tracking, and collection analysis.
+    columns:
+      - name: booking_id
+        description: Primary key.
+        tests:
+          - unique
+          - not_null
+      - name: gross_amount_eur
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
+      - name: paid_amount_eur
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"

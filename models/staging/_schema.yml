@@ -150,7 +150,7 @@ models:
           - accepted_values:
               arguments:
                 values: ['EUR', 'GBP', 'USD']
-      - name: paid_at
+      - name: first_paid_at
         tests:
           - not_null
       - name: payment_method

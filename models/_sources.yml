@@ -8,5 +8,11 @@ sources:
       - name: bookings
       - name: customers
       - name: fx_rates
+        config:
+          freshness:
+            error_after:
+              count: 1
+              period: day
+          loaded_at_field: "as_of_date"
       - name: payments
       - name: properties

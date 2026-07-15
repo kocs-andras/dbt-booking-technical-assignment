@@ -16,4 +16,14 @@ with source as (
     from {{ source('source_csv','properties') }} as p
 )
 
-select * from source
+, processed as (
+    select
+        s.property_id
+        , s.brand
+        , s.country
+        , lower(trim(s.property_type)) as property_type
+        , s.star_rating
+    from source as s
+)
+
+select * from processed

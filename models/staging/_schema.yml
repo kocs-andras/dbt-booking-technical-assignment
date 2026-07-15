@@ -6,6 +6,7 @@ models:
                  Acts as an abstraction layer that handles basic data quality by imputing missing check-in dates using the length of stay, and deduplicates system records.
     columns:
       - name: booking_id
+        description: Primary key.
         tests:
           - unique
           - not_null
@@ -29,7 +30,10 @@ models:
           - not_null
           - dbt_utils.expression_is_true:
               arguments:
-                expression: "<checkout_date"
+                expression: "< checkout_date"
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= cast(booked_at as date)"
       - name: checkout_date
         tests:
           - not_null
@@ -39,6 +43,7 @@ models:
               arguments:
                 values: ['EUR', 'GBP', 'USD']
       - name: customer_id
+        description: Secondary key to stg_customers.
         tests:
           - not_null
           - relationships:
@@ -50,14 +55,15 @@ models:
           - not_null
           - dbt_utils.expression_is_true:
               arguments:
-                expression: ">=0"
+                expression: ">= 0"
       - name: nights
         tests:
           - not_null
           - dbt_utils.expression_is_true:
               arguments:
-                expression: "=date_diff(checkout_date, checkin_date, day)"
+                expression: "= date_diff(checkout_date, checkin_date, day)"
       - name: property_id
+        description: Secondary key to stg_properties.
         tests:
           - not_null
           - relationships:
@@ -75,8 +81,20 @@ models:
                  Acts as an abstraction layer that handles basic data quality by imputing missing values in the loyalty_tier column to a default 'Blue' status.
     columns:
       - name: customer_id
+        description: Primary key.
         tests:
           - unique
+          - not_null
+      - name: country
+        tests:
+          - not_null
+      - name: loyalty_tier
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Blue', 'Silver', 'Gold', 'Platinum']
+      - name: signup_date
+        tests:
           - not_null
 
   - name: stg_fx_rates
@@ -84,24 +102,85 @@ models:
                  Organizes currency conversion rates against a EUR baseline to enable currency normalization in intermediate layers and generates a unique composite surrogate key combining currency and date.
     columns:
       - name: fx_rates_id
+        description: Primary surrogate key.
         tests:
           - unique
           - not_null
+      - name: as_of_date
+        tests:
+          - not_null
+      - name: currency
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['EUR', 'GBP', 'USD']
+      - name: rate_to_eur
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "> 0"
 
   - name: stg_payments
     description: Staging layer for payments.
                  Acts as an abstraction layer that handles basic data quality by deduplicating down to the chronologically first transaction per booking_id, aliasing the timestamp as first_paid_at.
     columns:
       - name: payment_id
+        description: Primary key.
         tests:
           - unique
           - not_null
+      - name: amount
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "> 0"
+      - name: booking_id
+        description: Secondary key to stg_bookings.
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_bookings')
+                field: booking_id
+      - name: currency
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['EUR', 'GBP', 'USD']
+      - name: paid_at
+        tests:
+          - not_null
+      - name: payment_method
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['bank_transfer', 'card', 'paypal', 'wallet']
 
   - name: stg_properties
     description: Staging layer for properties.
                  Acts as a clean 1-to-1 abstraction layer that selects core property data.
     columns:
       - name: property_id
+        description: Primary key.
         tests:
           - unique
           - not_null
+      - name: brand
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['agoda', 'Booking.com', 'KAYAK', 'priceline']
+      - name: country
+        tests:
+          - not_null
+      - name: property_type
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['apartment', 'hostel', 'hotel', 'resort', 'villa']
+      - name: star_rating
